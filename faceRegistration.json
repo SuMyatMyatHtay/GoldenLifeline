@@ -1,0 +1,293 @@
+[
+    {
+        "id": "46d17312a08f26ce",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bff9a3a0045cc394",
+        "type": "http in",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "url": "/testreg",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "954076cbb2ef54bb"
+            ]
+        ]
+    },
+    {
+        "id": "954076cbb2ef54bb",
+        "type": "json",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 270,
+        "y": 120,
+        "wires": [
+            [
+                "a78914bf180c20d8",
+                "7ad38f91aa78c41f"
+            ]
+        ]
+    },
+    {
+        "id": "a78914bf180c20d8",
+        "type": "debug",
+        "z": "46d17312a08f26ce",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2832bb31ce9fd49e",
+        "type": "debug",
+        "z": "46d17312a08f26ce",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "5c417f83b8132fe9",
+        "type": "deepstack-face-registration",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "server": "1c0f24a12b927922",
+        "userid": "",
+        "outputs": 1,
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "2832bb31ce9fd49e",
+                "a630023310c3a1a1"
+            ]
+        ]
+    },
+    {
+        "id": "d17b685c566ca8df",
+        "type": "function",
+        "z": "46d17312a08f26ce",
+        "name": "Set User ID",
+        "func": "global.set(\"userid\", \"SuMyat\"); \nmsg.userid = global.get(\"userid\"); \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 360,
+        "wires": [
+            [
+                "5c417f83b8132fe9"
+            ]
+        ]
+    },
+    {
+        "id": "a630023310c3a1a1",
+        "type": "function",
+        "z": "46d17312a08f26ce",
+        "name": "function 3",
+        "func": "var userid = global.get(\"userid\"); \nmsg.topic = \"INSERT INTO tbl_nodered_people (name) SELECT * FROM (SELECT '\"+userid+\"') AS tmp WHERE NOT EXISTS (SELECT name FROM tbl_nodered_people WHERE name = '\"+userid+\"') LIMIT 1;\"\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 560,
+        "wires": [
+            [
+                "d8d72143f1d7377c",
+                "767f716cb5cebcd9"
+            ]
+        ]
+    },
+    {
+        "id": "d8d72143f1d7377c",
+        "type": "mysql",
+        "z": "46d17312a08f26ce",
+        "mydb": "80b8cd4b52b05812",
+        "name": "",
+        "x": 990,
+        "y": 560,
+        "wires": [
+            [
+                "d36fb51d02095924"
+            ]
+        ]
+    },
+    {
+        "id": "d36fb51d02095924",
+        "type": "debug",
+        "z": "46d17312a08f26ce",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "2e6060a9eb9c124f",
+        "type": "http response",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1190,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "767f716cb5cebcd9",
+        "type": "template",
+        "z": "46d17312a08f26ce",
+        "name": "template",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{payload}}",
+        "output": "str",
+        "x": 1000,
+        "y": 640,
+        "wires": [
+            [
+                "2e6060a9eb9c124f"
+            ]
+        ]
+    },
+    {
+        "id": "7ad38f91aa78c41f",
+        "type": "base64",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "action": "",
+        "property": "payload.Contents",
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "2f32097a33724433",
+                "1707e128ae52acbe"
+            ]
+        ]
+    },
+    {
+        "id": "2f32097a33724433",
+        "type": "image",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 560,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1707e128ae52acbe",
+        "type": "change",
+        "z": "46d17312a08f26ce",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Contents",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 280,
+        "wires": [
+            [
+                "ba0c6503fe471d0a",
+                "d17b685c566ca8df"
+            ]
+        ]
+    },
+    {
+        "id": "ba0c6503fe471d0a",
+        "type": "debug",
+        "z": "46d17312a08f26ce",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "1c0f24a12b927922",
+        "type": "deepstack-server",
+        "proto": "http",
+        "host": "localhost",
+        "port": "32168",
+        "version": "v1",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "80b8cd4b52b05812",
+        "type": "MySQLdatabase",
+        "name": "db",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "mendix",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]

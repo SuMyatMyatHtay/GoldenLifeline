@@ -1,0 +1,337 @@
+[
+    {
+        "id": "5c3fbd079f674f1f",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "205e813e5b8781e7",
+        "type": "http in",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "url": "/testhttp",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "a49e4ea8c263a4cd"
+            ]
+        ]
+    },
+    {
+        "id": "a49e4ea8c263a4cd",
+        "type": "json",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 290,
+        "y": 140,
+        "wires": [
+            [
+                "1d767765c4de23db",
+                "b286cfdb252a6e0a"
+            ]
+        ]
+    },
+    {
+        "id": "1d767765c4de23db",
+        "type": "debug",
+        "z": "5c3fbd079f674f1f",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "b286cfdb252a6e0a",
+        "type": "base64",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "action": "",
+        "property": "payload.Contents",
+        "x": 360,
+        "y": 220,
+        "wires": [
+            [
+                "29c589fd64f225ef",
+                "9067129515a1c03b"
+            ]
+        ]
+    },
+    {
+        "id": "29c589fd64f225ef",
+        "type": "image",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 580,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "9067129515a1c03b",
+        "type": "change",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.Contents",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 300,
+        "wires": [
+            [
+                "31e493565b4f3ea0"
+            ]
+        ]
+    },
+    {
+        "id": "31e493565b4f3ea0",
+        "type": "deepstack-face-recognition",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "server": "57f383b7b4e2ac87",
+        "confidence": "70",
+        "drawPredictions": false,
+        "outlineColor": "pink",
+        "filters": [],
+        "outputs": 1,
+        "x": 650,
+        "y": 360,
+        "wires": [
+            [
+                "214062c22c2e0a87",
+                "d31e8abed3ef4a3b"
+            ]
+        ]
+    },
+    {
+        "id": "214062c22c2e0a87",
+        "type": "debug",
+        "z": "5c3fbd079f674f1f",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d31e8abed3ef4a3b",
+        "type": "change",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "userid",
+                "pt": "flow",
+                "to": "payload[0].userid",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 860,
+        "y": 440,
+        "wires": [
+            [
+                "cfb04838ec9e6b10"
+            ]
+        ]
+    },
+    {
+        "id": "cfb04838ec9e6b10",
+        "type": "function",
+        "z": "5c3fbd079f674f1f",
+        "name": "function",
+        "func": "var userid = flow.get(\"userid\")\nmsg.topic = \"SELECT EXISTS(SELECT * FROM tbl_nodered_people WHERE name = '\"+userid+\"' )\"\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 440,
+        "wires": [
+            [
+                "60c057b626a0280e"
+            ]
+        ]
+    },
+    {
+        "id": "60c057b626a0280e",
+        "type": "mysql",
+        "z": "5c3fbd079f674f1f",
+        "mydb": "80b8cd4b52b05812",
+        "name": "",
+        "x": 1250,
+        "y": 440,
+        "wires": [
+            [
+                "5cd38c4edb611ca9",
+                "d9de3fe9a9529703"
+            ]
+        ]
+    },
+    {
+        "id": "5cd38c4edb611ca9",
+        "type": "debug",
+        "z": "5c3fbd079f674f1f",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1430,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d9de3fe9a9529703",
+        "type": "function",
+        "z": "5c3fbd079f674f1f",
+        "name": "function",
+        "func": "var userid = flow.get(\"userid\")\nmsg.payload = msg.payload[0][\"EXISTS(SELECT * FROM tbl_nodered_people WHERE name = '\"+userid+\"' )\"]\n\nmsg.topic = \"INSERT into tbl_facerec_mendix (recognition) VALUES ('\"+ msg.payload +\"');\"\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 520,
+        "wires": [
+            [
+                "0ced4cd82833127a",
+                "e8b69b8986e3db2f"
+            ]
+        ]
+    },
+    {
+        "id": "0ced4cd82833127a",
+        "type": "mysql",
+        "z": "5c3fbd079f674f1f",
+        "mydb": "80b8cd4b52b05812",
+        "name": "",
+        "x": 1570,
+        "y": 520,
+        "wires": [
+            [
+                "67e06bce4f4d9dc8"
+            ]
+        ]
+    },
+    {
+        "id": "67e06bce4f4d9dc8",
+        "type": "debug",
+        "z": "5c3fbd079f674f1f",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1750,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "e8b69b8986e3db2f",
+        "type": "template",
+        "z": "5c3fbd079f674f1f",
+        "name": "template",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{payload}}",
+        "output": "str",
+        "x": 1580,
+        "y": 600,
+        "wires": [
+            [
+                "260e7ebf6cc835e5"
+            ]
+        ]
+    },
+    {
+        "id": "260e7ebf6cc835e5",
+        "type": "http response",
+        "z": "5c3fbd079f674f1f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1750,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "57f383b7b4e2ac87",
+        "type": "deepstack-server",
+        "proto": "http",
+        "host": "localhost",
+        "port": "32168",
+        "version": "v1",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "80b8cd4b52b05812",
+        "type": "MySQLdatabase",
+        "name": "db",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "mendix",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]
